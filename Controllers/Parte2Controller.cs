@@ -31,7 +31,7 @@ namespace ProvaPub.Controllers
         }
 	
 		[HttpGet("products")]
-		public ProductList ListProducts(int page)
+		public Paginacao<Product> ListProducts(int page)
 		{
 			//var productService = new ProductService(_ctx);
 			var productService = _productService.ListProducts(page);
@@ -39,7 +39,7 @@ namespace ProvaPub.Controllers
 		}
 
 		[HttpGet("customers")]
-		public CustomerList ListCustomers(int page)
+		public Paginacao<Customer> ListCustomers(int page)
 		{
 			//var customerService = new CustomerService(_ctx);
 			var customerService = _customerService.ListCustomers(page);

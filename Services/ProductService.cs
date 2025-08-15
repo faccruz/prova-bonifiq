@@ -12,7 +12,7 @@ namespace ProvaPub.Services
 			_ctx = ctx;
 		}
 
-		public ProductList  ListProducts(int page)
+		public Paginacao<Product>  ListProducts(int page)
 		{
 			int pageSize = 10;
 
@@ -27,7 +27,7 @@ namespace ProvaPub.Services
 
 			bool hasNext = totalCount > skip + pageSize;
 
-            return new ProductList() {  HasNext=hasNext, TotalCount = totalCount, Products = products };
+            return new Paginacao<Product>(products, totalCount, hasNext );
 		}
 
 	}
