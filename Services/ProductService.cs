@@ -5,30 +5,19 @@ namespace ProvaPub.Services
 {
 	public class ProductService
 	{
-		TestDbContext _ctx;
+		private readonly TestDbContext _ctx;
+		private readonly PaginationService<Product> _paginationService;
 
-		public ProductService(TestDbContext ctx)
+        public ProductService(TestDbContext ctx, PaginationService<Product> paginationService)
 		{
 			_ctx = ctx;
-		}
+			_paginationService = paginationService;
+        }
 
 		public Paginacao<Product>  ListProducts(int page)
 		{
-			int pageSize = 10;
-
-			var skip = (page - 1) * pageSize;
-
-			var products = _ctx.Products
-				.Skip(skip)
-				.Take(pageSize)
-				.ToList();
-
-			var totalCount = _ctx.Products.Count();
-
-			bool hasNext = totalCount > skip + pageSize;
-
-            return new Paginacao<Product>(products, totalCount, hasNext );
-		}
+			return _paginationService.ListItems(_ctx.Products, page);
+        }
 
 	}
 }

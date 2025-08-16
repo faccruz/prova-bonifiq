@@ -6,25 +6,18 @@ namespace ProvaPub.Services
 {
     public class CustomerService
     {
-        TestDbContext _ctx;
+        private readonly TestDbContext _ctx;
+        private readonly PaginationService<Customer> _paginationService;
 
-        public CustomerService(TestDbContext ctx)
+        public CustomerService(TestDbContext ctx, PaginationService<Customer> paginationService)
         {
             _ctx = ctx;
+            _paginationService = paginationService;
         }
 
         public Paginacao<Customer> ListCustomers(int page)
         {
-            int pageSize = 10;
-            var skip = (page - 1) * pageSize;
-            var customers = _ctx.Customers
-                .Skip(skip)
-                .Take(pageSize)
-                .ToList();
-
-            var totalCount = _ctx.Customers.Count();
-            var hasNext = totalCount > skip + pageSize;
-            return new Paginacao<Customer>(customers, totalCount, hasNext);            
+            return _paginationService.ListItems(_ctx.Customers, page);
         }
 
         public async Task<bool> CanPurchase(int customerId, decimal purchaseValue)
