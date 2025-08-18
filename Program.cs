@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProvaPub.Models;
+using ProvaPub.Pagamentos.Estrategias;
+using ProvaPub.Payments;
 using ProvaPub.Repository;
 using ProvaPub.Services;
 
@@ -20,6 +22,13 @@ builder.Services.AddScoped(typeof(PaginationService<>));
 
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<PaymentFactory>();
+builder.Services.AddScoped<OrderService>();
+
+builder.Services.AddScoped<IPaymentMethod, PixPayment>();
+builder.Services.AddScoped<IPaymentMethod, CreditCardPayment>();
+builder.Services.AddScoped<IPaymentMethod, BoletoPayment>();
+builder.Services.AddScoped<IPaymentMethod, PayPalPayment>();
 
 var app = builder.Build();
 

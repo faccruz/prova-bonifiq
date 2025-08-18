@@ -17,19 +17,35 @@ namespace ProvaPub.Controllers
     /// Demonstre como você faria isso.
     /// </summary>
     [ApiController]
-	[Route("[controller]")]
-	public class Parte3Controller :  ControllerBase
-	{
-		[HttpGet("orders")]
-		public async Task<Order> PlaceOrder(string paymentMethod, decimal paymentValue, int customerId)
-		{
-            var contextOptions = new DbContextOptionsBuilder<TestDbContext>()
-    .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Teste;Trusted_Connection=True;")
-    .Options;
+    [Route("[controller]")]
+    public class Parte3Controller : ControllerBase
+    {
+        private readonly OrderService _orderService;
 
-            using var context = new TestDbContext(contextOptions);
+        public Parte3Controller(OrderService orderService)
+        {
+            _orderService = orderService;
+        }
 
-            return await new OrderService(context).PayOrder(paymentMethod, paymentValue, customerId);
-		}
-	}
+        [HttpGet("orders")]
+        public async Task<OrderDto> PlaceOrder(string paymentMethod, decimal paymentValue, int customerId)
+        {
+            var order = await _orderService.PayOrder(paymentMethod, paymentValue, customerId);
+
+            var brasilTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+
+            var localDate = TimeZoneInfo.ConvertTimeFromUtc(order.OrderDate, brasilTimeZone);
+
+            var response = new OrderDto
+            {
+                Id = order.Id,
+                Value = order.Value,
+                CustomerId = order.CustomerId,
+                OrderDate = localDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                Customer = order.Customer
+            };
+
+            return response;
+        }
+    }
 }
