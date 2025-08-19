@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ProvaPub.Interface;
 using ProvaPub.Models;
 using ProvaPub.Pagamentos.Estrategias;
 using ProvaPub.Payments;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<PaymentFactory>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
 builder.Services.AddScoped<IPaymentMethod, PixPayment>();
 builder.Services.AddScoped<IPaymentMethod, CreditCardPayment>();
